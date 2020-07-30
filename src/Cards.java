@@ -116,8 +116,127 @@ public class Cards {
         return max;
     }
 
-    public static int check(int[] arr) {
+    public static int check(int[] oldarr) {
+        int[] v = new int[5];
+        int[] s = new int[5];
+        for (int x = 0; x < 5; x++) {
+            v[x] = oldarr[x] % 13;
+            s[x] = oldarr[x] / 13;
+        }
+        Arrays.sort(v);
 
+        int str8 = straight(v);
+        boolean f = flush(s);
+
+        if (str8 == 999 && f) {
+            //royal flush
+            return 696969;
+        }
+        if (str8 == 1 && f) {
+            //straight flush
+            return 900 + (v[4]);
+        }
+        if (fourofakind(v)) {
+            //4 of a kind
+            return 800 + (v[2]);
+        }
+
+        if (fullhouse(v) > 0) {
+            //full house
+            return 700 + (v[fullhouse(v)]);
+        }
+
+        if (f) {
+            //flush
+            return 600 + (v[4]);
+        }
+
+        if (str8 > 0) {
+            //straight
+            if (str8 == 999) {
+                return 513;
+            } else {
+                return 500 + v[4];
+            }
+        }
+
+        if (threeofakind(v)) {
+            //3 of a kind
+            return 400 + v[2];
+        }
+
+        if (twopairs(v)) {
+            // 2 pairs
+            return 300 + v[3];
+        }
+
+        if (pair(v) > 0) {
+            // 1 pair
+            return 200 + v[pair(v)];
+        }
+
+        // high card
+        return 100 + v[4];
+
+
+    }
+
+    public static int pair(int[] arr) {
+        if (arr[0] == arr[1]) {
+            return 1;
+        }
+        if (arr[1] == arr[2]) {
+            return 2;
+        }
+        if (arr[2] == arr[3]) {
+            return 3;
+        }
+        if (arr[3] == arr[4]) {
+            return 4;
+        }
+        return 0;
+    }
+
+    public static boolean twopairs(int[] arr) {
+        return (arr[0] == arr[1] && (arr[2] == arr[3] || arr[3] == arr[4])) || (arr[1] == arr[2] && arr[3] == arr[4]);
+    }
+
+    public static boolean threeofakind(int[] arr) {
+        return arr[0] == arr[2] || arr[1] == arr[3] || arr[2] == arr[4];
+    }
+
+    public static int fullhouse(int[] arr) {
+        if (arr[0] == arr[1] && arr[2] == arr[3] && arr[3] == arr[4]) {
+            return 4;
+        }
+        if (arr[0] == arr[1] && arr[1] == arr[2] && arr[3] == arr[4]) {
+            return 1;
+        }
+        return 0;
+
+    }
+
+    public static boolean fourofakind(int[] arr) {
+        int a = arr[0];
+        int b = arr[4];
+        return (a == arr[1] && a == arr[2] && a == arr[3]) || (b == arr[1] && b == arr[2] && b == arr[3]);
+    }
+
+    public static int straight(int[] arr) {
+        int v = arr[0];
+        if (v == 0 && arr[1] == 9 && arr[2] == 10 && arr[3] == 11 && arr[4] == 12) {
+            return 999;
+        }
+        if (arr[1] == v + 1 && arr[2] == v + 2 && arr[3] == v + 3 && arr[4] == v + 4) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public static boolean flush(int[] arr) {
+        int s = arr[0];
+        return arr[1] == s && arr[2] == s && arr[3] == s && arr[4] == s;
     }
 
     public static ArrayList<int[]> get5from7(int c1, int c2, ArrayList<Integer> drawnFlops) {
