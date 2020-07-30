@@ -28,7 +28,7 @@ public class Main {
             long starttime = System.nanoTime();
             monteCarlo(c1, c2, numOthers, flops);
             long endtime = System.nanoTime();
-            System.out.println("benchmark " + ((endtime - starttime)) / 1000000.0);
+            System.out.println("milliseconds used: " + ((endtime - starttime)) / 1000000.0);
             //calculate pre-flop
 
             System.out.println("Enter flop:");
@@ -135,6 +135,7 @@ public class Main {
         System.out.println("Win: " + (wins / (100000.00)));
         System.out.println("Tie: " + (ties / (100000.00)));
         System.out.println("Lose: " + (losses / (100000.00)));
+        System.out.println("Benchmark winrate: " + (1.0 / (numOthers + 1)));
         System.out.println("==========");
 
 
