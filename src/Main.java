@@ -22,9 +22,13 @@ public class Main {
             String n2 = Cards.cardName(c2);
             ArrayList<Integer> flops = new ArrayList<>();
 
-            System.out.println("How many players are you playing against?");
+
             int numOthers = askPlayers();
 
+            long starttime = System.nanoTime();
+            monteCarlo(c1, c2, numOthers, flops);
+            long endtime = System.nanoTime();
+            System.out.println("benchmark " + ((endtime - starttime)) / 1000000.0);
             //calculate pre-flop
 
             System.out.println("Enter flop:");
@@ -40,7 +44,7 @@ public class Main {
 
             numOthers = askPlayers();
 
-            //calculate
+            monteCarlo(c1, c2, numOthers, flops);
 
             System.out.println("Enter 4th card:");
             String f4 = input.nextLine();
@@ -51,6 +55,7 @@ public class Main {
             numOthers = askPlayers();
 
             //calculate
+            monteCarlo(c1, c2, numOthers, flops);
 
             System.out.println("Enter 5th card:");
             String f5 = input.nextLine();
@@ -61,6 +66,8 @@ public class Main {
             numOthers = askPlayers();
 
             //calculate
+            monteCarlo(c1, c2, numOthers, flops);
+
 
             System.out.println("Press enter for new game");
             String lmao = input.nextLine();
@@ -68,7 +75,7 @@ public class Main {
         }
     }
 
-    public static ArrayList<Double> monteCarlo(String card1, String card2, int numOthers, ArrayList<Integer> flops) {
+    public static void monteCarlo(String card1, String card2, int numOthers, ArrayList<Integer> flops) {
         ArrayList<Double> results = new ArrayList<>();
         int wins = 0;
         int ties = 0;
@@ -80,7 +87,7 @@ public class Main {
         ArrayList<Integer> drawnFlops = new ArrayList<>();
         int temp;
         int outcome;
-        for (int repetitions = 0; repetitions < 10000; repetitions++) {
+        for (int repetitions = 0; repetitions < 100000; repetitions++) {
             used = new HashSet<>();
             othersCards = new ArrayList<>();
             drawnFlops = (ArrayList<Integer>) flops.clone();
@@ -103,7 +110,13 @@ public class Main {
                 used.add(temp);
                 drawnFlops.add(temp);
             }
+/*
+            othersCards.forEach(n-> System.out.print(n+" "));
+            System.out.println();
 
+            drawnFlops.forEach(n-> System.out.print(n+" "));
+            System.out.println();
+*/
             outcome = Cards.evaluate(c1, c2, othersCards, drawnFlops);
 
             if (outcome == 1) {
@@ -118,10 +131,17 @@ public class Main {
 
         }
 
-        return results;
+        System.out.println("==========");
+        System.out.println("Win: " + (wins / (100000.00)));
+        System.out.println("Tie: " + (ties / (100000.00)));
+        System.out.println("Lose: " + (losses / (100000.00)));
+        System.out.println("==========");
+
+
     }
 
     public static int askPlayers() {
+        System.out.println("How many players are you playing against?");
         int num = input.nextInt();
         String dummy = input.nextLine();
         return num;

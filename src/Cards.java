@@ -90,11 +90,14 @@ public class Cards {
         int numOthers = othersCards.size() / 2;
 
         int selfScore = getScore(get5from7(c1, c2, drawnFlops));
+
         ArrayList<Integer> othersScores = new ArrayList<>();
         for (int x = 0; x < othersCards.size(); x += 2) {
             othersScores.add(getScore(get5from7(othersCards.get(x), othersCards.get(x + 1), drawnFlops)));
         }
         Collections.sort(othersScores);
+        //System.out.println("selfscore: "+selfScore);
+        //othersScores.forEach(n-> System.out.println("other "+n));
         if (selfScore > othersScores.get(othersScores.size() - 1)) {
             return 1;
         } else if (selfScore == othersScores.get(othersScores.size() - 1)) {
@@ -127,32 +130,53 @@ public class Cards {
 
         int str8 = straight(v);
         boolean f = flush(s);
-
+        //print(v);
         if (str8 == 999 && f) {
             //royal flush
+            //System.out.println("royal");
             return 696969;
         }
         if (str8 == 1 && f) {
             //straight flush
+            //System.out.println("straight flush"+v[4]);
             return 900 + (v[4]);
         }
+
+        for (int x = 0; x < 5; x++) {
+            if (v[x] == 0) {
+                v[x] = 13;
+            }
+        }
+        Arrays.sort(v);
+
         if (fourofakind(v)) {
             //4 of a kind
+            //System.out.println("four"+v[2]);
             return 800 + (v[2]);
         }
 
         if (fullhouse(v) > 0) {
             //full house
+            //System.out.println("full");
             return 700 + (v[fullhouse(v)]);
         }
 
         if (f) {
             //flush
+            //System.out.println("reg flush"+v[4]);
             return 600 + (v[4]);
         }
 
+        for (int x = 0; x < 5; x++) {
+            if (v[x] == 13) {
+                v[x] = 0;
+            }
+        }
+        Arrays.sort(v);
+
         if (str8 > 0) {
             //straight
+            //System.out.println("straight reg");
             if (str8 == 999) {
                 return 513;
             } else {
@@ -160,25 +184,44 @@ public class Cards {
             }
         }
 
+        for (int x = 0; x < 5; x++) {
+            if (v[x] == 0) {
+                v[x] = 13;
+            }
+        }
+        Arrays.sort(v);
+
         if (threeofakind(v)) {
             //3 of a kind
+            //System.out.println("3 of "+v[2]);
             return 400 + v[2];
         }
 
         if (twopairs(v)) {
             // 2 pairs
+            //System.out.println("2 pairs"+v[3]);
             return 300 + v[3];
         }
 
         if (pair(v) > 0) {
             // 1 pair
+            //System.out.println("pair"+v[pair(v)]);
             return 200 + v[pair(v)];
         }
 
         // high card
+        //System.out.println("high"+v[4]);
         return 100 + v[4];
 
 
+    }
+
+    public static void print(int[] arr) {
+        System.out.print("===");
+        for (int x = 0; x < arr.length; x++) {
+            System.out.print(arr[x] + " ");
+        }
+        System.out.println("===");
     }
 
     public static int pair(int[] arr) {
@@ -240,13 +283,16 @@ public class Cards {
     }
 
     public static ArrayList<int[]> get5from7(int c1, int c2, ArrayList<Integer> drawnFlops) {
+        ArrayList<Integer> flopsClone = (ArrayList<Integer>) drawnFlops.clone();
+        flopsClone.add(c1);
+        flopsClone.add(c2);
         ArrayList<int[]> arr = new ArrayList<>();
         for (int a = 0; a < 7; a++) {
             for (int b = a + 1; b < 7; b++) {
                 for (int c = b + 1; c < 7; c++) {
                     for (int d = c + 1; d < 7; d++) {
                         for (int e = d + 1; e < 7; e++) {
-                            arr.add(new int[]{a, b, c, d, e});
+                            arr.add(new int[]{flopsClone.get(a), flopsClone.get(b), flopsClone.get(c), flopsClone.get(d), flopsClone.get(e)});
                         }
                     }
                 }
